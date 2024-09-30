@@ -20,14 +20,14 @@ jobRoleSelect.addEventListener('change', (e) =>{
 // 4. T-shirt info Selection 
 // Disable color selection element: 
 const colorSelect = document.getElementById('color');
-colorSelect.disable = true;
+colorSelect.disabled = true;
 // Set up the "design" element to listen for changes 
 const designSelect = document.getElementById('design');
 // Gets all the options elements in the color dropdown
 const colorOptions = colorSelect.children; 
 // 
 designSelect.addEventListener('change', (e) => {
-    colorSelect.disable= false;
+    colorSelect.disabled= false;
     const selectedDesign = e.target.value;
 //Loop through color options and display only match the selected design 
     for (let i =0; i < colorOptions.length; i++){
@@ -124,16 +124,33 @@ function isCreditCardValid() {
 }
 
 // Helper functions for visual feedback
-function showValidationResult(element, isValid) {
-  const parent = element.parentElement;
+// function showValidationResult(element, isValid) {
+//   const parent = element.parentElement;
+//   if (isValid) {
+//     parent.classList.add('valid');
+//     parent.classList.remove('not-valid');
+//     parent.querySelector('.hint').style.display = 'none';
+//   } else {
+//     parent.classList.add('not-valid');
+//     parent.classList.remove('valid');
+//     parent.querySelector('.hint').style.display = 'block';
+//   }
+// }
+
+  function showValidationResult(element, isValid) {
+  // Determine the parent element to which classes should be applied
+  const parent = element.tagName === 'FIELDSET' ? element : element.parentElement;
+
   if (isValid) {
+    // If valid, add 'valid' class and remove 'not-valid' class
     parent.classList.add('valid');
     parent.classList.remove('not-valid');
-    parent.querySelector('.hint').style.display = 'none';
+    parent.querySelector('.hint').style.display = 'none'; // Hide hint for valid input
   } else {
+    // If not valid, add 'not-valid' class and remove 'valid' class
     parent.classList.add('not-valid');
     parent.classList.remove('valid');
-    parent.querySelector('.hint').style.display = 'block';
+    parent.querySelector('.hint').style.display = 'block'; // Show hint for invalid input
   }
 }
 
@@ -145,10 +162,10 @@ form.addEventListener('submit', (e) => {
     e.preventDefault();
 
     // Feedback for each field
+    const activitiesFieldset = document.getElementById('activities');
+    showValidationResult(activitiesFieldset, isActivitySelected());
     showValidationResult(nameInput, isNameValid());
     showValidationResult(emailInput, isEmailValid());
-    showValidationResult(activities, isActivitySelected());
-
     if (paymentSelect.value === 'credit-card') {
       showValidationResult(cardNumberInput, /^\d{13,16}$/.test(cardNumberInput.value));
       showValidationResult(zipCodeInput, /^\d{5}$/.test(zipCodeInput.value));
